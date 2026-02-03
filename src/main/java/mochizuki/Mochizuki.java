@@ -122,7 +122,7 @@ public class Mochizuki {
             }
             tasks.add(new Todo(description));
             System.out.println(" Got it. I've added this task:");
-            System.out.println("   " + tasks.getLast().formatForList());
+            System.out.println("   " + tasks.get(tasks.size() - 1).formatForList());
             System.out.println(" Now you have " + tasks.size() + " tasks in the list.");
             storage.save(tasks);
             System.out.println(line);
@@ -141,7 +141,7 @@ public class Mochizuki {
             }
             tasks.add(new Deadline(description, by));
             System.out.println(" Got it. I've added this task:");
-            System.out.println("   " + tasks.getLast().formatForList());
+            System.out.println("   " + tasks.get(tasks.size() - 1).formatForList());
             System.out.println(" Now you have " + tasks.size() + " tasks in the list.");
             storage.save(tasks);
             System.out.println(line);
@@ -164,7 +164,7 @@ public class Mochizuki {
             }
             tasks.add(new Event(description, from, to));
             System.out.println(" Got it. I've added this task:");
-            System.out.println("   " + tasks.getLast().formatForList());
+            System.out.println("   " + tasks.get(tasks.size() - 1).formatForList());
             System.out.println(" Now you have " + tasks.size() + " tasks in the list.");
             storage.save(tasks);
             System.out.println(line);
