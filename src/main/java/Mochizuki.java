@@ -59,8 +59,65 @@ public class Mochizuki {
                 continue;
             }
 
+            if (input.startsWith("todo ")) {
+                String description = input.substring(5).trim();
+                if (description.isEmpty()) {
+                    System.out.println(" A to-do needs a description.");
+                } else if (taskCount < tasks.length) {
+                    tasks[taskCount] = new Todo(description);
+                    taskCount++;
+                    System.out.println(" Got it. I've added this task:");
+                    System.out.println("   " + tasks[taskCount - 1].formatForList());
+                    System.out.println(" Now you have " + taskCount + " tasks in the list.");
+                } else {
+                    System.out.println(" The ledger is full. I can hold no more.");
+                }
+                System.out.println(line);
+                continue;
+            }
+
+            if (input.startsWith("deadline ")) {
+                int byIndex = input.indexOf(" /by ");
+                String description = byIndex >= 0 ? input.substring(9, byIndex).trim() : "";
+                String by = byIndex >= 0 ? input.substring(byIndex + 5).trim() : "";
+                if (description.isEmpty() || by.isEmpty()) {
+                    System.out.println(" A deadline needs a description and a /by time.");
+                } else if (taskCount < tasks.length) {
+                    tasks[taskCount] = new Deadline(description, by);
+                    taskCount++;
+                    System.out.println(" Got it. I've added this task:");
+                    System.out.println("   " + tasks[taskCount - 1].formatForList());
+                    System.out.println(" Now you have " + taskCount + " tasks in the list.");
+                } else {
+                    System.out.println(" The ledger is full. I can hold no more.");
+                }
+                System.out.println(line);
+                continue;
+            }
+
+            if (input.startsWith("event ")) {
+                int fromIndex = input.indexOf(" /from ");
+                int toIndex = input.indexOf(" /to ");
+                String description = fromIndex >= 0 ? input.substring(6, fromIndex).trim() : "";
+                String from = (fromIndex >= 0 && toIndex > fromIndex) ? input.substring(fromIndex + 7, toIndex).trim() : "";
+                String to = toIndex >= 0 ? input.substring(toIndex + 5).trim() : "";
+                if (description.isEmpty() || from.isEmpty() || to.isEmpty()) {
+                    System.out.println(" An event needs a description, /from time, and /to time.");
+                } else if (taskCount < tasks.length) {
+                    tasks[taskCount] = new Event(description, from, to);
+                    taskCount++;
+                    System.out.println(" Got it. I've added this task:");
+                    System.out.println("   " + tasks[taskCount - 1].formatForList());
+                    System.out.println(" Now you have " + taskCount + " tasks in the list.");
+                } else {
+                    System.out.println(" The ledger is full. I can hold no more.");
+                }
+                System.out.println(line);
+                continue;
+            }
+
             if (taskCount < tasks.length) {
-                tasks[taskCount] = new Task(input);
+                tasks[taskCount] = new Todo(input);
                 taskCount++;
                 System.out.println(" added: " + input);
             } else {
@@ -78,9 +135,9 @@ public class Mochizuki {
         }
     }
 
-    private static class Task {
-        private final String description;
-        private boolean isDone;
+    private static abstract class Task {
+        protected final String description;
+        protected boolean isDone;
 
         Task(String description) {
             this.description = description;
@@ -96,7 +153,64 @@ public class Mochizuki {
         }
 
         String formatForList() {
-            return "[" + (isDone ? "X" : " ") + "] " + description;
+            return getTypeIcon() + "[" + (isDone ? "X" : " ") + "] " + description + getDetails();
+        }
+
+        protected abstract String getTypeIcon();
+
+        protected String getDetails() {
+            return "";
+        }
+    }
+
+    private static class Todo extends Task {
+        Todo(String description) {
+            super(description);
+        }
+
+        @Override
+        protected String getTypeIcon() {
+            return "[T]";
+        }
+    }
+
+    private static class Deadline extends Task {
+        private final String by;
+
+        Deadline(String description, String by) {
+            super(description);
+            this.by = by;
+        }
+
+        @Override
+        protected String getTypeIcon() {
+            return "[D]";
+        }
+
+        @Override
+        protected String getDetails() {
+            return " (by: " + by + ")";
+        }
+    }
+
+    private static class Event extends Task {
+        private final String from;
+        private final String to;
+
+        Event(String description, String from, String to) {
+            super(description);
+            this.from = from;
+            this.to = to;
+        }
+
+        @Override
+        protected String getTypeIcon() {
+            return "[E]";
+        }
+
+        @Override
+        protected String getDetails() {
+            return " (from: " + from + " to: " + to + ")";
         }
     }
 }
