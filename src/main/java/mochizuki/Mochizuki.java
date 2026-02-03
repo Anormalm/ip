@@ -1,5 +1,7 @@
 package mochizuki;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 import mochizuki.exception.MochizukiException;
@@ -12,8 +14,7 @@ public class Mochizuki {
     public static void main(String[] args) {
         String line = "____________________________________________________________";
         Scanner scanner = new Scanner(System.in);
-        Task[] tasks = new Task[100];
-        int taskCount = 0;
+        List<Task> tasks = new ArrayList<>();
 
         System.out.println(line);
         System.out.println(" Konbanwa! I'm Mochizuki, keeper of the moonlit to-do list.");
@@ -24,11 +25,8 @@ public class Mochizuki {
             String input = scanner.nextLine();
             System.out.println(line);
             try {
-                if (handleInput(input, tasks, line, taskCount)) {
+                if (handleInput(input, tasks, line)) {
                     break;
-                }
-                if (input.startsWith("todo ") || input.startsWith("deadline ") || input.startsWith("event ")) {
-                    taskCount++;
                 }
             } catch (MochizukiException e) {
                 System.out.println(" " + e.getMessage());
@@ -37,7 +35,7 @@ public class Mochizuki {
         }
     }
 
-    private static boolean handleInput(String input, Task[] tasks, String line, int taskCount)
+    private static boolean handleInput(String input, List<Task> tasks, String line)
             throws MochizukiException {
         if ("bye".equals(input)) {
             System.out.println(" Bye. Hope to see you again soon!");
@@ -45,12 +43,12 @@ public class Mochizuki {
             return true;
         }
         if ("list".equals(input)) {
-            if (taskCount == 0) {
+            if (tasks.isEmpty()) {
                 System.out.println(" The shrine shelves are empty.");
             } else {
                 System.out.println(" Here are the tasks in your list:");
-                for (int i = 0; i < taskCount; i++) {
-                    System.out.println(" " + (i + 1) + "." + tasks[i].formatForList());
+                for (int i = 0; i < tasks.size(); i++) {
+                    System.out.println(" " + (i + 1) + "." + tasks.get(i).formatForList());
                 }
             }
             System.out.println(line);
@@ -59,10 +57,10 @@ public class Mochizuki {
 
         if (input.startsWith("mark ")) {
             int index = parseIndex(input.substring(5));
-            if (index >= 0 && index < taskCount) {
-                tasks[index].markDone();
+            if (index >= 0 && index < tasks.size()) {
+                tasks.get(index).markDone();
                 System.out.println(" Nice! I've marked this task as done:");
-                System.out.println("   " + tasks[index].formatForList());
+                System.out.println("   " + tasks.get(index).formatForList());
             } else {
                 throw new MochizukiException("That task number does not exist. Try `list` to see valid numbers.");
             }
@@ -72,10 +70,24 @@ public class Mochizuki {
 
         if (input.startsWith("unmark ")) {
             int index = parseIndex(input.substring(7));
-            if (index >= 0 && index < taskCount) {
-                tasks[index].markNotDone();
+            if (index >= 0 && index < tasks.size()) {
+                tasks.get(index).markNotDone();
                 System.out.println(" OK, I've marked this task as not done yet:");
-                System.out.println("   " + tasks[index].formatForList());
+                System.out.println("   " + tasks.get(index).formatForList());
+            } else {
+                throw new MochizukiException("That task number does not exist. Try `list` to see valid numbers.");
+            }
+            System.out.println(line);
+            return false;
+        }
+
+        if (input.startsWith("delete ")) {
+            int index = parseIndex(input.substring(7));
+            if (index >= 0 && index < tasks.size()) {
+                Task removed = tasks.remove(index);
+                System.out.println(" Noted. I've removed this task:");
+                System.out.println("   " + removed.formatForList());
+                System.out.println(" Now you have " + tasks.size() + " tasks in the list.");
             } else {
                 throw new MochizukiException("That task number does not exist. Try `list` to see valid numbers.");
             }
@@ -91,13 +103,10 @@ public class Mochizuki {
             if (description.isEmpty()) {
                 throw new MochizukiException("A to-do needs a description after `todo`.");
             }
-            if (taskCount >= tasks.length) {
-                throw new MochizukiException("The ledger is full. I can hold no more.");
-            }
-            tasks[taskCount] = new Todo(description);
+            tasks.add(new Todo(description));
             System.out.println(" Got it. I've added this task:");
-            System.out.println("   " + tasks[taskCount].formatForList());
-            System.out.println(" Now you have " + (taskCount + 1) + " tasks in the list.");
+            System.out.println("   " + tasks.getLast().formatForList());
+            System.out.println(" Now you have " + tasks.size() + " tasks in the list.");
             System.out.println(line);
             return false;
         }
@@ -112,13 +121,10 @@ public class Mochizuki {
             if (description.isEmpty() || by.isEmpty()) {
                 throw new MochizukiException("A deadline needs a description and a /by time.");
             }
-            if (taskCount >= tasks.length) {
-                throw new MochizukiException("The ledger is full. I can hold no more.");
-            }
-            tasks[taskCount] = new Deadline(description, by);
+            tasks.add(new Deadline(description, by));
             System.out.println(" Got it. I've added this task:");
-            System.out.println("   " + tasks[taskCount].formatForList());
-            System.out.println(" Now you have " + (taskCount + 1) + " tasks in the list.");
+            System.out.println("   " + tasks.getLast().formatForList());
+            System.out.println(" Now you have " + tasks.size() + " tasks in the list.");
             System.out.println(line);
             return false;
         }
@@ -137,13 +143,10 @@ public class Mochizuki {
             if (description.isEmpty() || from.isEmpty() || to.isEmpty()) {
                 throw new MochizukiException("An event needs a description, /from time, and /to time.");
             }
-            if (taskCount >= tasks.length) {
-                throw new MochizukiException("The ledger is full. I can hold no more.");
-            }
-            tasks[taskCount] = new Event(description, from, to);
+            tasks.add(new Event(description, from, to));
             System.out.println(" Got it. I've added this task:");
-            System.out.println("   " + tasks[taskCount].formatForList());
-            System.out.println(" Now you have " + (taskCount + 1) + " tasks in the list.");
+            System.out.println("   " + tasks.getLast().formatForList());
+            System.out.println(" Now you have " + tasks.size() + " tasks in the list.");
             System.out.println(line);
             return false;
         }
