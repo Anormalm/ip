@@ -81,6 +81,9 @@ public class Mochizuki {
             return false;
         }
 
+        if ("delete".equals(input)) {
+            throw new MochizukiException("Tell me which task to delete, e.g., `delete 2`.");
+        }
         if (input.startsWith("delete ")) {
             int index = parseIndex(input.substring(7));
             if (index >= 0 && index < tasks.size()) {
