@@ -17,6 +17,14 @@ public abstract class Task {
         isDone = false;
     }
 
+    public boolean isDone() {
+        return isDone;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
     public String formatForList() {
         return getTypeIcon() + "[" + (isDone ? "X" : " ") + "] " + description + getDetails();
     }
@@ -26,4 +34,6 @@ public abstract class Task {
     protected String getDetails() {
         return "";
     }
+
+    public abstract String toDataString();
 }

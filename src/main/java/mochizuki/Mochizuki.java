@@ -3,8 +3,10 @@ package mochizuki;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import java.nio.file.Paths;
 
 import mochizuki.exception.MochizukiException;
+import mochizuki.storage.Storage;
 import mochizuki.task.Deadline;
 import mochizuki.task.Event;
 import mochizuki.task.Task;
@@ -15,6 +17,15 @@ public class Mochizuki {
         String line = "____________________________________________________________";
         Scanner scanner = new Scanner(System.in);
         List<Task> tasks = new ArrayList<>();
+        Storage storage = new Storage(Paths.get("data", "mochizuki.txt"));
+
+        try {
+            tasks.addAll(storage.load());
+        } catch (MochizukiException e) {
+            System.out.println(line);
+            System.out.println(" " + e.getMessage());
+            System.out.println(line);
+        }
 
         System.out.println(line);
         System.out.println(" Konbanwa! I'm Mochizuki, keeper of the moonlit to-do list.");
@@ -25,7 +36,7 @@ public class Mochizuki {
             String input = scanner.nextLine();
             System.out.println(line);
             try {
-                if (handleInput(input, tasks, line)) {
+                if (handleInput(input, tasks, line, storage)) {
                     break;
                 }
             } catch (MochizukiException e) {
@@ -35,7 +46,7 @@ public class Mochizuki {
         }
     }
 
-    private static boolean handleInput(String input, List<Task> tasks, String line)
+    private static boolean handleInput(String input, List<Task> tasks, String line, Storage storage)
             throws MochizukiException {
         if ("bye".equals(input)) {
             System.out.println(" Bye. Hope to see you again soon!");
@@ -61,6 +72,7 @@ public class Mochizuki {
                 tasks.get(index).markDone();
                 System.out.println(" Nice! I've marked this task as done:");
                 System.out.println("   " + tasks.get(index).formatForList());
+                storage.save(tasks);
             } else {
                 throw new MochizukiException("That task number does not exist. Try `list` to see valid numbers.");
             }
@@ -74,6 +86,7 @@ public class Mochizuki {
                 tasks.get(index).markNotDone();
                 System.out.println(" OK, I've marked this task as not done yet:");
                 System.out.println("   " + tasks.get(index).formatForList());
+                storage.save(tasks);
             } else {
                 throw new MochizukiException("That task number does not exist. Try `list` to see valid numbers.");
             }
@@ -91,6 +104,7 @@ public class Mochizuki {
                 System.out.println(" Noted. I've removed this task:");
                 System.out.println("   " + removed.formatForList());
                 System.out.println(" Now you have " + tasks.size() + " tasks in the list.");
+                storage.save(tasks);
             } else {
                 throw new MochizukiException("That task number does not exist. Try `list` to see valid numbers.");
             }
@@ -110,6 +124,7 @@ public class Mochizuki {
             System.out.println(" Got it. I've added this task:");
             System.out.println("   " + tasks.getLast().formatForList());
             System.out.println(" Now you have " + tasks.size() + " tasks in the list.");
+            storage.save(tasks);
             System.out.println(line);
             return false;
         }
@@ -128,6 +143,7 @@ public class Mochizuki {
             System.out.println(" Got it. I've added this task:");
             System.out.println("   " + tasks.getLast().formatForList());
             System.out.println(" Now you have " + tasks.size() + " tasks in the list.");
+            storage.save(tasks);
             System.out.println(line);
             return false;
         }
@@ -150,6 +166,7 @@ public class Mochizuki {
             System.out.println(" Got it. I've added this task:");
             System.out.println("   " + tasks.getLast().formatForList());
             System.out.println(" Now you have " + tasks.size() + " tasks in the list.");
+            storage.save(tasks);
             System.out.println(line);
             return false;
         }
