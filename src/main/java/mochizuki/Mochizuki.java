@@ -1,4 +1,12 @@
+package mochizuki;
+
 import java.util.Scanner;
+
+import mochizuki.exception.MochizukiException;
+import mochizuki.task.Deadline;
+import mochizuki.task.Event;
+import mochizuki.task.Task;
+import mochizuki.task.Todo;
 
 public class Mochizuki {
     public static void main(String[] args) {
@@ -148,91 +156,6 @@ public class Mochizuki {
             return Integer.parseInt(raw.trim()) - 1;
         } catch (NumberFormatException e) {
             return -1;
-        }
-    }
-
-    private static class MochizukiException extends Exception {
-        MochizukiException(String message) {
-            super(message);
-        }
-    }
-
-    private static abstract class Task {
-        protected final String description;
-        protected boolean isDone;
-
-        Task(String description) {
-            this.description = description;
-            this.isDone = false;
-        }
-
-        void markDone() {
-            isDone = true;
-        }
-
-        void markNotDone() {
-            isDone = false;
-        }
-
-        String formatForList() {
-            return getTypeIcon() + "[" + (isDone ? "X" : " ") + "] " + description + getDetails();
-        }
-
-        protected abstract String getTypeIcon();
-
-        protected String getDetails() {
-            return "";
-        }
-    }
-
-    private static class Todo extends Task {
-        Todo(String description) {
-            super(description);
-        }
-
-        @Override
-        protected String getTypeIcon() {
-            return "[T]";
-        }
-    }
-
-    private static class Deadline extends Task {
-        private final String by;
-
-        Deadline(String description, String by) {
-            super(description);
-            this.by = by;
-        }
-
-        @Override
-        protected String getTypeIcon() {
-            return "[D]";
-        }
-
-        @Override
-        protected String getDetails() {
-            return " (by: " + by + ")";
-        }
-    }
-
-    private static class Event extends Task {
-        private final String from;
-        private final String to;
-
-        Event(String description, String from, String to) {
-            super(description);
-            this.from = from;
-            this.to = to;
-        }
-
-        @Override
-        protected String getTypeIcon() {
-            return "[E]";
-        }
-
-        @Override
-        protected String getDetails() {
-            return " (from: " + from + " to: " + to + ")";
         }
     }
 }
