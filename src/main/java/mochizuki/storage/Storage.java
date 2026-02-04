@@ -16,13 +16,27 @@ import mochizuki.task.Event;
 import mochizuki.task.Task;
 import mochizuki.task.Todo;
 
+/**
+ * Persists tasks to disk and loads them at startup.
+ */
 public class Storage {
     private final Path path;
 
+    /**
+     * Creates a storage handler for the given file path.
+     *
+     * @param path storage file path
+     */
     public Storage(Path path) {
         this.path = path;
     }
 
+    /**
+     * Loads tasks from disk. Missing files are treated as empty storage.
+     *
+     * @return loaded tasks
+     * @throws MochizukiException if the file cannot be read
+     */
     public List<Task> load() throws MochizukiException {
         if (!Files.exists(path)) {
             return new ArrayList<>();
@@ -56,6 +70,12 @@ public class Storage {
         return tasks;
     }
 
+    /**
+     * Saves tasks to disk, creating parent folders as needed.
+     *
+     * @param tasks tasks to persist
+     * @throws MochizukiException if saving fails
+     */
     public void save(List<Task> tasks) throws MochizukiException {
         try {
             Path parent = path.getParent();
@@ -72,6 +92,12 @@ public class Storage {
         }
     }
 
+    /**
+     * Parses a single line of stored data into a task.
+     *
+     * @param line raw data line
+     * @return task or null if corrupted
+     */
     private Task parseLine(String line) {
         String[] parts = line.split("\\s*\\|\\s*");
         if (parts.length < 3) {
