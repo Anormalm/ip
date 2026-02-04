@@ -4,6 +4,7 @@ import mochizuki.command.Command;
 import mochizuki.command.DeleteCommand;
 import mochizuki.command.DeadlineCommand;
 import mochizuki.command.EventCommand;
+import mochizuki.command.FindCommand;
 import mochizuki.command.FindDateCommand;
 import mochizuki.command.ExitCommand;
 import mochizuki.command.ListCommand;
@@ -21,6 +22,12 @@ public class Parser {
         }
         if ("list".equals(input)) {
             return new ListCommand();
+        }
+        if ("find".equals(input)) {
+            throw new MochizukiException("Tell me what to find, e.g., `find book`.");
+        }
+        if (input.startsWith("find ")) {
+            return new FindCommand(input.substring(5).trim());
         }
         if ("mark".equals(input)) {
             throw new MochizukiException("Tell me which task to mark, e.g., `mark 2`.");

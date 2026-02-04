@@ -58,4 +58,15 @@ public class TaskList {
         }
         return matches;
     }
+
+    public List<Task> findByKeyword(String keyword) {
+        List<Task> matches = new ArrayList<>();
+        String needle = keyword.toLowerCase();
+        for (Task task : tasks) {
+            if (task.getDescription().toLowerCase().contains(needle)) {
+                matches.add(task);
+            }
+        }
+        return matches;
+    }
 }

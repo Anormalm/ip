@@ -93,4 +93,15 @@ public class Ui {
             System.out.println(" " + (i + 1) + "." + tasks.get(i).formatForList());
         }
     }
+
+    public void showFoundTasks(List<Task> tasks) {
+        if (tasks.isEmpty()) {
+            showMessage("No matching tasks found.");
+            return;
+        }
+        showMessage("Here are the matching tasks in your list:");
+        for (int i = 0; i < tasks.size(); i++) {
+            System.out.println(" " + (i + 1) + "." + tasks.get(i).formatForList());
+        }
+    }
 }
