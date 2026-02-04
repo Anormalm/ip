@@ -27,69 +27,70 @@ public class Parser {
      * @throws MochizukiException if the command is invalid
      */
     public static Command parse(String input) throws MochizukiException {
-        if ("bye".equals(input)) {
+        String trimmed = input.trim();
+        if ("bye".equals(trimmed)) {
             return new ExitCommand();
         }
-        if ("list".equals(input)) {
+        if ("list".equals(trimmed)) {
             return new ListCommand();
         }
-        if ("find".equals(input)) {
+        if ("find".equals(trimmed)) {
             throw new MochizukiException("Tell me what to find, e.g., `find book`.");
         }
-        if (input.startsWith("find ")) {
-            return new FindCommand(input.substring(5).trim());
+        if (trimmed.startsWith("find ")) {
+            return new FindCommand(trimmed.substring(5).trim());
         }
-        if ("mark".equals(input)) {
+        if ("mark".equals(trimmed)) {
             throw new MochizukiException("Tell me which task to mark, e.g., `mark 2`.");
         }
-        if (input.startsWith("mark ")) {
-            return new MarkCommand(parseIndex(input.substring(5)));
+        if (trimmed.startsWith("mark ")) {
+            return new MarkCommand(parseIndex(trimmed.substring(5)));
         }
-        if ("unmark".equals(input)) {
+        if ("unmark".equals(trimmed)) {
             throw new MochizukiException("Tell me which task to unmark, e.g., `unmark 2`.");
         }
-        if (input.startsWith("unmark ")) {
-            return new UnmarkCommand(parseIndex(input.substring(7)));
+        if (trimmed.startsWith("unmark ")) {
+            return new UnmarkCommand(parseIndex(trimmed.substring(7)));
         }
-        if ("delete".equals(input)) {
+        if ("delete".equals(trimmed)) {
             throw new MochizukiException("Tell me which task to delete, e.g., `delete 2`.");
         }
-        if (input.startsWith("delete ")) {
-            return new DeleteCommand(parseIndex(input.substring(7)));
+        if (trimmed.startsWith("delete ")) {
+            return new DeleteCommand(parseIndex(trimmed.substring(7)));
         }
-        if ("todo".equals(input)) {
+        if ("todo".equals(trimmed)) {
             throw new MochizukiException("A to-do needs a description after `todo`.");
         }
-        if (input.startsWith("todo ")) {
-            return new TodoCommand(input.substring(5).trim());
+        if (trimmed.startsWith("todo ")) {
+            return new TodoCommand(trimmed.substring(5).trim());
         }
-        if ("deadline".equals(input)) {
+        if ("deadline".equals(trimmed)) {
             throw new MochizukiException("A deadline needs a description and a /by time.");
         }
-        if (input.startsWith("deadline ")) {
-            int byIndex = input.indexOf(" /by ");
-            String description = byIndex >= 0 ? input.substring(9, byIndex).trim() : "";
-            String by = byIndex >= 0 ? input.substring(byIndex + 5).trim() : "";
+        if (trimmed.startsWith("deadline ")) {
+            int byIndex = trimmed.indexOf(" /by ");
+            String description = byIndex >= 0 ? trimmed.substring(9, byIndex).trim() : "";
+            String by = byIndex >= 0 ? trimmed.substring(byIndex + 5).trim() : "";
             return new DeadlineCommand(description, parseDate(by));
         }
-        if ("event".equals(input)) {
+        if ("event".equals(trimmed)) {
             throw new MochizukiException("An event needs a description, /from time, and /to time.");
         }
-        if (input.startsWith("event ")) {
-            int fromIndex = input.indexOf(" /from ");
-            int toIndex = input.indexOf(" /to ");
-            String description = fromIndex >= 0 ? input.substring(6, fromIndex).trim() : "";
+        if (trimmed.startsWith("event ")) {
+            int fromIndex = trimmed.indexOf(" /from ");
+            int toIndex = trimmed.indexOf(" /to ");
+            String description = fromIndex >= 0 ? trimmed.substring(6, fromIndex).trim() : "";
             String from = (fromIndex >= 0 && toIndex > fromIndex)
-                    ? input.substring(fromIndex + 7, toIndex).trim()
+                    ? trimmed.substring(fromIndex + 7, toIndex).trim()
                     : "";
-            String to = toIndex >= 0 ? input.substring(toIndex + 5).trim() : "";
+            String to = toIndex >= 0 ? trimmed.substring(toIndex + 5).trim() : "";
             return new EventCommand(description, parseDate(from), parseDate(to));
         }
-        if ("find-date".equals(input)) {
+        if ("find-date".equals(trimmed)) {
             throw new MochizukiException("Tell me the date, e.g., `find-date 2019-12-02`.");
         }
-        if (input.startsWith("find-date ")) {
-            String dateRaw = input.substring(10).trim();
+        if (trimmed.startsWith("find-date ")) {
+            String dateRaw = trimmed.substring(10).trim();
             return new FindDateCommand(parseDate(dateRaw));
         }
         throw new MochizukiException("I don't recognize that incantation. Try `list`, `todo`, `deadline`, or `event`.");
