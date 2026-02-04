@@ -15,7 +15,17 @@ import mochizuki.exception.MochizukiException;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 
+/**
+ * Parses user input into executable commands.
+ */
 public class Parser {
+    /**
+     * Parses a full command string into a Command object.
+     *
+     * @param input raw user input
+     * @return parsed command
+     * @throws MochizukiException if the command is invalid
+     */
     public static Command parse(String input) throws MochizukiException {
         if ("bye".equals(input)) {
             return new ExitCommand();
@@ -85,6 +95,13 @@ public class Parser {
         throw new MochizukiException("I don't recognize that incantation. Try `list`, `todo`, `deadline`, or `event`.");
     }
 
+    /**
+     * Parses a 1-based index token into a 0-based index.
+     *
+     * @param raw index token
+     * @return zero-based index
+     * @throws MochizukiException if the token is not a number
+     */
     private static int parseIndex(String raw) throws MochizukiException {
         try {
             return Integer.parseInt(raw.trim()) - 1;
@@ -93,6 +110,13 @@ public class Parser {
         }
     }
 
+    /**
+     * Parses a date in yyyy-mm-dd format.
+     *
+     * @param raw date token
+     * @return parsed date
+     * @throws MochizukiException if the date format is invalid
+     */
     private static LocalDate parseDate(String raw) throws MochizukiException {
         try {
             return LocalDate.parse(raw.trim());
