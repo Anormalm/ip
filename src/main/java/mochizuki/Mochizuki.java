@@ -2,7 +2,6 @@ package mochizuki;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 import java.nio.file.Paths;
 
 import mochizuki.exception.MochizukiException;
@@ -11,37 +10,33 @@ import mochizuki.task.Deadline;
 import mochizuki.task.Event;
 import mochizuki.task.Task;
 import mochizuki.task.Todo;
+import mochizuki.ui.Ui;
 
 public class Mochizuki {
     public static void main(String[] args) {
         String line = "____________________________________________________________";
-        Scanner scanner = new Scanner(System.in);
         List<Task> tasks = new ArrayList<>();
         Storage storage = new Storage(Paths.get("data", "mochizuki.txt"));
+        Ui ui = new Ui();
 
         try {
             tasks.addAll(storage.load());
         } catch (MochizukiException e) {
-            System.out.println(line);
-            System.out.println(" " + e.getMessage());
-            System.out.println(line);
+            ui.showLoadingError(e.getMessage());
         }
 
-        System.out.println(line);
-        System.out.println(" Konbanwa! I'm Mochizuki, keeper of the moonlit to-do list.");
-        System.out.println(" Tell me your command.");
-        System.out.println(line);
+        ui.showWelcome();
 
-        while (scanner.hasNextLine()) {
-            String input = scanner.nextLine();
-            System.out.println(line);
+        while (true) {
+            String input = ui.readCommand();
+            ui.showLine();
             try {
                 if (handleInput(input, tasks, line, storage)) {
                     break;
                 }
             } catch (MochizukiException e) {
-                System.out.println(" " + e.getMessage());
-                System.out.println(line);
+                ui.showError(e.getMessage());
+                ui.showLine();
             }
         }
     }
