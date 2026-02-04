@@ -1,9 +1,12 @@
 package mochizuki.tasklist;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
 import mochizuki.task.Task;
+import mochizuki.task.Deadline;
+import mochizuki.task.Event;
 
 public class TaskList {
     private final List<Task> tasks;
@@ -38,5 +41,21 @@ public class TaskList {
 
     public List<Task> asUnmodifiableList() {
         return List.copyOf(tasks);
+    }
+
+    public List<Task> findByDate(LocalDate date) {
+        List<Task> matches = new ArrayList<>();
+        for (Task task : tasks) {
+            if (task instanceof Deadline deadline) {
+                if (deadline.getBy().equals(date)) {
+                    matches.add(task);
+                }
+            } else if (task instanceof Event event) {
+                if (!date.isBefore(event.getFrom()) && !date.isAfter(event.getTo())) {
+                    matches.add(task);
+                }
+            }
+        }
+        return matches;
     }
 }

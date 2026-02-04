@@ -4,6 +4,7 @@ import mochizuki.command.Command;
 import mochizuki.command.DeleteCommand;
 import mochizuki.command.DeadlineCommand;
 import mochizuki.command.EventCommand;
+import mochizuki.command.FindDateCommand;
 import mochizuki.command.ExitCommand;
 import mochizuki.command.ListCommand;
 import mochizuki.command.MarkCommand;
@@ -65,7 +66,14 @@ public class Parser {
                     ? input.substring(fromIndex + 7, toIndex).trim()
                     : "";
             String to = toIndex >= 0 ? input.substring(toIndex + 5).trim() : "";
-            return new EventCommand(description, from, to);
+            return new EventCommand(description, parseDate(from), parseDate(to));
+        }
+        if ("find-date".equals(input)) {
+            throw new MochizukiException("Tell me the date, e.g., `find-date 2019-12-02`.");
+        }
+        if (input.startsWith("find-date ")) {
+            String dateRaw = input.substring(10).trim();
+            return new FindDateCommand(parseDate(dateRaw));
         }
         throw new MochizukiException("I don't recognize that incantation. Try `list`, `todo`, `deadline`, or `event`.");
     }

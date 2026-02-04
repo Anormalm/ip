@@ -110,7 +110,11 @@ public class Storage {
             if (parts.length < 5) {
                 return null;
             }
-            task = new Event(description, parts[3], parts[4]);
+            try {
+                task = new Event(description, LocalDate.parse(parts[3]), LocalDate.parse(parts[4]));
+            } catch (DateTimeParseException e) {
+                return null;
+            }
             break;
         default:
             return null;

@@ -1,12 +1,16 @@
 package mochizuki.ui;
 
 import java.util.Scanner;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 import mochizuki.task.Task;
 import mochizuki.tasklist.TaskList;
 
 public class Ui {
     private static final String LINE = "____________________________________________________________";
+    private static final DateTimeFormatter OUTPUT_FORMAT = DateTimeFormatter.ofPattern("MMM d yyyy");
     private final Scanner scanner;
 
     public Ui() {
@@ -77,5 +81,16 @@ public class Ui {
         showMessage("Noted. I've removed this task:");
         System.out.println("   " + task.formatForList());
         showMessage("Now you have " + count + " tasks in the list.");
+    }
+
+    public void showTasksOnDate(List<Task> tasks, LocalDate date) {
+        if (tasks.isEmpty()) {
+            showMessage("No tasks found on " + date.format(OUTPUT_FORMAT) + ".");
+            return;
+        }
+        showMessage("Tasks on " + date.format(OUTPUT_FORMAT) + ":");
+        for (int i = 0; i < tasks.size(); i++) {
+            System.out.println(" " + (i + 1) + "." + tasks.get(i).formatForList());
+        }
     }
 }

@@ -1,13 +1,25 @@
 package mochizuki.task;
 
-public class Event extends Task {
-    private final String from;
-    private final String to;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
-    public Event(String description, String from, String to) {
+public class Event extends Task {
+    private static final DateTimeFormatter OUTPUT_FORMAT = DateTimeFormatter.ofPattern("MMM d yyyy");
+    private final LocalDate from;
+    private final LocalDate to;
+
+    public Event(String description, LocalDate from, LocalDate to) {
         super(description);
         this.from = from;
         this.to = to;
+    }
+
+    public LocalDate getFrom() {
+        return from;
+    }
+
+    public LocalDate getTo() {
+        return to;
     }
 
     @Override
@@ -17,7 +29,7 @@ public class Event extends Task {
 
     @Override
     protected String getDetails() {
-        return " (from: " + from + " to: " + to + ")";
+        return " (from: " + from.format(OUTPUT_FORMAT) + " to: " + to.format(OUTPUT_FORMAT) + ")";
     }
 
     @Override
