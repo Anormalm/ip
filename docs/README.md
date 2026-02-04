@@ -1,42 +1,48 @@
 # Mochizuki User Guide
 
-Konbanwa!  こんばんは！
+Mochizuki is a calm, minimal task tracker for to-dos, deadlines, and events. It saves automatically, supports fast keyword search, and can show tasks that occur on a specific date.
 
-Mochizuki is a lightweight task tracker with a calm, moonlit personality. It supports to-dos, deadlines, and events, plus fast searching and date queries.
+<img src="images/mochizuki.png" alt="Mochizuki screenshot" width="700">
 
-![Screenshot of Mochizuki](images/mochizuki.png)
+## Contents
+
+- [Quick Start](#quick-start)
+- [Command Summary](#command-summary)
+- [Features](#features)
+- [Date Formats](#date-formats)
+- [FAQ](#faq)
+- [Data Storage](#data-storage)
 
 ## Quick Start
 
-1. Ensure you have Java 17 installed.
-2. Run the app with:
+1. Ensure Java 17 is installed.
+2. Run:
    ```
    java -jar Mochizuki.jar
    ```
-3. Type a command and press Enter.
+3. Enter a command and press Enter.
 
 ## Command Summary
 
-- `list`
-- `todo DESCRIPTION`
-- `deadline DESCRIPTION /by YYYY-MM-DD`
-- `event DESCRIPTION /from YYYY-MM-DD /to YYYY-MM-DD`
-- `mark INDEX`
-- `unmark INDEX`
-- `delete INDEX`
-- `find KEYWORD`
-- `find-date YYYY-MM-DD`
-- `bye`
+| Command | Description |
+|---|---|
+| `list` | Show all tasks |
+| `todo DESCRIPTION` | Add a to-do |
+| `deadline DESCRIPTION /by YYYY-MM-DD` | Add a deadline |
+| `event DESCRIPTION /from YYYY-MM-DD /to YYYY-MM-DD` | Add an event |
+| `mark INDEX` | Mark a task as done |
+| `unmark INDEX` | Mark a task as not done |
+| `delete INDEX` | Remove a task |
+| `find KEYWORD` | Find tasks by keyword |
+| `find-date YYYY-MM-DD` | Find tasks occurring on a date |
+| `bye` | Exit |
 
 ## Features
 
 ### Add a to-do
 
-Adds a simple task without dates.
-
-Example: `todo borrow book`
-
-Expected output:
+**Command:** `todo borrow book`  
+**Result:**
 ```
  Got it. I've added this task:
    [T][ ] borrow book
@@ -45,109 +51,106 @@ Expected output:
 
 ### Add a deadline
 
-Adds a task with a due date. Dates must be in `YYYY-MM-DD`.
-
-Example: `deadline return book /by 2026-02-05`
-
-Expected output:
+**Command:** `deadline return book /by 2019-12-02`  
+**Result:**
 ```
  Got it. I've added this task:
-   [D][ ] return book (by: Feb 5 2026)
+   [D][ ] return book (by: Dec 2 2019)
  Now you have 2 tasks in the list.
 ```
 
 ### Add an event
 
-Adds a task with a start and end date. Dates must be in `YYYY-MM-DD`.
-
-Example: `event project meeting /from 2026-02-01 /to 2026-02-10`
-
-Expected output:
+**Command:** `event project meeting /from 2019-12-01 /to 2019-12-03`  
+**Result:**
 ```
  Got it. I've added this task:
-   [E][ ] project meeting (from: Feb 1 2026 to: Feb 10 2026)
+   [E][ ] project meeting (from: Dec 1 2019 to: Dec 3 2019)
  Now you have 3 tasks in the list.
 ```
 
 ### List tasks
 
-Shows all tasks in the current list.
-
-Example: `list`
-
-Expected output:
+**Command:** `list`  
+**Result:**
 ```
  Here are the tasks in your list:
  1.[T][ ] borrow book
- 2.[D][ ] return book (by: Feb 5 2026)
- 3.[E][ ] project meeting (from: Feb 1 2026 to: Feb 10 2026)
+ 2.[D][ ] return book (by: Dec 2 2019)
+ 3.[E][ ] project meeting (from: Dec 1 2019 to: Dec 3 2019)
 ```
 
 ### Mark a task as done
 
-Example: `mark 2`
-
-Expected output:
+**Command:** `mark 2`  
+**Result:**
 ```
  Nice! I've marked this task as done:
-   [D][X] return book (by: Feb 5 2026)
+   [D][X] return book (by: Dec 2 2019)
 ```
 
 ### Unmark a task
 
-Example: `unmark 2`
-
-Expected output:
+**Command:** `unmark 2`  
+**Result:**
 ```
  OK, I've marked this task as not done yet:
-   [D][ ] return book (by: Feb 5 2026)
+   [D][ ] return book (by: Dec 2 2019)
 ```
 
 ### Delete a task
 
-Example: `delete 3`
-
-Expected output:
+**Command:** `delete 3`  
+**Result:**
 ```
  Noted. I've removed this task:
-   [E][ ] project meeting (from: Feb 1 2026 to: Feb 10 2026)
+   [E][ ] project meeting (from: Dec 1 2019 to: Dec 3 2019)
  Now you have 2 tasks in the list.
 ```
 
 ### Find tasks by keyword
 
-Finds tasks whose descriptions contain the keyword (case-insensitive).
-
-Example: `find book`
-
-Expected output:
+**Command:** `find book`  
+**Result:**
 ```
  Here are the matching tasks in your list:
  1.[T][ ] borrow book
- 2.[D][ ] return book (by: Feb 5 2026)
+ 2.[D][ ] return book (by: Dec 2 2019)
 ```
 
 ### Find tasks by date
 
-Shows deadlines on the date and events spanning the date.
-
-Example: `find-date 2026-02-05`
-
-Expected output:
+**Command:** `find-date 2019-12-02`  
+**Result:**
 ```
- Tasks on Feb 5 2026:
- 1.[D][ ] return book (by: Feb 5 2026)
- 2.[E][ ] project meeting (from: Feb 1 2026 to: Feb 10 2026)
+ Tasks on Dec 2 2019:
+ 1.[D][ ] return book (by: Dec 2 2019)
+ 2.[E][ ] project meeting (from: Dec 1 2019 to: Dec 3 2019)
 ```
 
 ### Exit
 
-Example: `bye`
-
-Expected output:
+**Command:** `bye`  
+**Result:**
 ```
  Bye. Hope to see you again soon!
 ```
+
+## Date Formats
+
+- Input format: `YYYY-MM-DD` (e.g., `2019-12-02`)
+- Output format: `MMM d yyyy` (e.g., `Dec 2 2019`)
+
+## FAQ
+
+**Why does `deadline` or `event` reject my date?**  
+Dates must be in `YYYY-MM-DD`. Example: `2019-12-02`.
+
+**What happens if the data file is missing?**  
+Mochizuki will start with an empty list and create the file when you add a task.
+
+**My data file looks corrupted. What happens?**  
+Invalid lines are skipped, and the rest of the tasks still load.
 
 ## Data Storage
 
