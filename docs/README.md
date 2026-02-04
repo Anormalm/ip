@@ -51,21 +51,21 @@ Mochizuki is a calm, minimal task tracker for to-dos, deadlines, and events. It 
 
 ### Add a deadline
 
-**Command:** `deadline return book /by 2019-12-02`  
+**Command:** `deadline return book /by 2026-02-12`  
 **Result:**
 ```
  Got it. I've added this task:
-   [D][ ] return book (by: Dec 2 2019)
+   [D][ ] return book (by: Feb 12 2026)
  Now you have 2 tasks in the list.
 ```
 
 ### Add an event
 
-**Command:** `event project meeting /from 2019-12-01 /to 2019-12-03`  
+**Command:** `event project meeting /from 2026-02-10 /to 2026-02-12`  
 **Result:**
 ```
  Got it. I've added this task:
-   [E][ ] project meeting (from: Dec 1 2019 to: Dec 3 2019)
+   [E][ ] project meeting (from: Feb 10 2026 to: Feb 12 2026)
  Now you have 3 tasks in the list.
 ```
 
@@ -76,8 +76,8 @@ Mochizuki is a calm, minimal task tracker for to-dos, deadlines, and events. It 
 ```
  Here are the tasks in your list:
  1.[T][ ] borrow book
- 2.[D][ ] return book (by: Dec 2 2019)
- 3.[E][ ] project meeting (from: Dec 1 2019 to: Dec 3 2019)
+ 2.[D][ ] return book (by: Feb 12 2026)
+ 3.[E][ ] project meeting (from: Feb 10 2026 to: Feb 12 2026)
 ```
 
 ### Mark a task as done
@@ -86,7 +86,7 @@ Mochizuki is a calm, minimal task tracker for to-dos, deadlines, and events. It 
 **Result:**
 ```
  Nice! I've marked this task as done:
-   [D][X] return book (by: Dec 2 2019)
+   [D][X] return book (by: Feb 12 2026)
 ```
 
 ### Unmark a task
@@ -95,7 +95,7 @@ Mochizuki is a calm, minimal task tracker for to-dos, deadlines, and events. It 
 **Result:**
 ```
  OK, I've marked this task as not done yet:
-   [D][ ] return book (by: Dec 2 2019)
+   [D][ ] return book (by: Feb 12 2026)
 ```
 
 ### Delete a task
@@ -104,7 +104,7 @@ Mochizuki is a calm, minimal task tracker for to-dos, deadlines, and events. It 
 **Result:**
 ```
  Noted. I've removed this task:
-   [E][ ] project meeting (from: Dec 1 2019 to: Dec 3 2019)
+   [E][ ] project meeting (from: Feb 10 2026 to: Feb 12 2026)
  Now you have 2 tasks in the list.
 ```
 
@@ -115,17 +115,17 @@ Mochizuki is a calm, minimal task tracker for to-dos, deadlines, and events. It 
 ```
  Here are the matching tasks in your list:
  1.[T][ ] borrow book
- 2.[D][ ] return book (by: Dec 2 2019)
+ 2.[D][ ] return book (by: Feb 12 2026)
 ```
 
 ### Find tasks by date
 
-**Command:** `find-date 2019-12-02`  
+**Command:** `find-date 2026-02-12`  
 **Result:**
 ```
- Tasks on Dec 2 2019:
- 1.[D][ ] return book (by: Dec 2 2019)
- 2.[E][ ] project meeting (from: Dec 1 2019 to: Dec 3 2019)
+ Tasks on Feb 12 2026:
+ 1.[D][ ] return book (by: Feb 12 2026)
+ 2.[E][ ] project meeting (from: Feb 10 2026 to: Feb 12 2026)
 ```
 
 ### Exit
@@ -138,13 +138,13 @@ Mochizuki is a calm, minimal task tracker for to-dos, deadlines, and events. It 
 
 ## Date Formats
 
-- Input format: `YYYY-MM-DD` (e.g., `2019-12-02`)
-- Output format: `MMM d yyyy` (e.g., `Dec 2 2019`)
+- Input format: `YYYY-MM-DD` (e.g., `2026-02-12`)
+- Output format: `MMM d yyyy` (e.g., `Feb 12 2026`)
 
 ## FAQ
 
 **Why does `deadline` or `event` reject my date?**  
-Dates must be in `YYYY-MM-DD`. Example: `2019-12-02`.
+Dates must be in `YYYY-MM-DD`. Example: `2026-02-12`.
 
 **What happens if the data file is missing?**  
 Mochizuki will start with an empty list and create the file when you add a task.
@@ -155,3 +155,9 @@ Invalid lines are skipped, and the rest of the tasks still load.
 ## Data Storage
 
 Tasks are saved automatically to `data/mochizuki.txt` in the working directory. The file is created if it does not exist.
+
+## Easter Eggs
+
+- If you made it this far, you found a small thank-you note.
+- Thank you, CS2113 Teaching Group, for the guidance and structure throughout the project.
+- Thank you, peer reviewers, for the careful feedback and time.
