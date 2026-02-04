@@ -1,178 +1,50 @@
 package mochizuki;
 
+import java.nio.file.Path;
 import java.nio.file.Paths;
 
+import mochizuki.command.Command;
 import mochizuki.exception.MochizukiException;
+import mochizuki.parser.Parser;
 import mochizuki.storage.Storage;
-import mochizuki.task.Deadline;
-import mochizuki.task.Event;
-import mochizuki.task.Task;
-import mochizuki.task.Todo;
 import mochizuki.tasklist.TaskList;
 import mochizuki.ui.Ui;
 
 public class Mochizuki {
-    public static void main(String[] args) {
-        String line = "____________________________________________________________";
-        TaskList tasks = new TaskList();
-        Storage storage = new Storage(Paths.get("data", "mochizuki.txt"));
-        Ui ui = new Ui();
+    private final Storage storage;
+    private TaskList tasks;
+    private final Ui ui;
 
+    public Mochizuki(Path filePath) {
+        this.ui = new Ui();
+        this.storage = new Storage(filePath);
         try {
-            tasks = new TaskList(storage.load());
+            this.tasks = new TaskList(storage.load());
         } catch (MochizukiException e) {
             ui.showLoadingError(e.getMessage());
+            this.tasks = new TaskList();
         }
+    }
 
+    public void run() {
         ui.showWelcome();
-
-        while (true) {
+        boolean isExit = false;
+        while (!isExit) {
             String input = ui.readCommand();
             ui.showLine();
             try {
-                if (handleInput(input, tasks, line, storage)) {
-                    break;
-                }
+                Command command = Parser.parse(input);
+                command.execute(tasks, ui, storage);
+                isExit = command.isExit();
             } catch (MochizukiException e) {
                 ui.showError(e.getMessage());
+            } finally {
                 ui.showLine();
             }
         }
     }
 
-    private static boolean handleInput(String input, TaskList tasks, String line, Storage storage)
-            throws MochizukiException {
-        if ("bye".equals(input)) {
-            System.out.println(" Bye. Hope to see you again soon!");
-            System.out.println(line);
-            return true;
-        }
-        if ("list".equals(input)) {
-            if (tasks.isEmpty()) {
-                System.out.println(" The shrine shelves are empty.");
-            } else {
-                System.out.println(" Here are the tasks in your list:");
-                for (int i = 0; i < tasks.size(); i++) {
-                    System.out.println(" " + (i + 1) + "." + tasks.get(i).formatForList());
-                }
-            }
-            System.out.println(line);
-            return false;
-        }
-
-        if (input.startsWith("mark ")) {
-            int index = parseIndex(input.substring(5));
-            if (index >= 0 && index < tasks.size()) {
-                tasks.get(index).markDone();
-                System.out.println(" Nice! I've marked this task as done:");
-                System.out.println("   " + tasks.get(index).formatForList());
-                storage.save(tasks.asUnmodifiableList());
-            } else {
-                throw new MochizukiException("That task number does not exist. Try `list` to see valid numbers.");
-            }
-            System.out.println(line);
-            return false;
-        }
-
-        if (input.startsWith("unmark ")) {
-            int index = parseIndex(input.substring(7));
-            if (index >= 0 && index < tasks.size()) {
-                tasks.get(index).markNotDone();
-                System.out.println(" OK, I've marked this task as not done yet:");
-                System.out.println("   " + tasks.get(index).formatForList());
-                storage.save(tasks.asUnmodifiableList());
-            } else {
-                throw new MochizukiException("That task number does not exist. Try `list` to see valid numbers.");
-            }
-            System.out.println(line);
-            return false;
-        }
-
-        if ("delete".equals(input)) {
-            throw new MochizukiException("Tell me which task to delete, e.g., `delete 2`.");
-        }
-        if (input.startsWith("delete ")) {
-            int index = parseIndex(input.substring(7));
-            if (index >= 0 && index < tasks.size()) {
-                Task removed = tasks.remove(index);
-                System.out.println(" Noted. I've removed this task:");
-                System.out.println("   " + removed.formatForList());
-                System.out.println(" Now you have " + tasks.size() + " tasks in the list.");
-                storage.save(tasks.asUnmodifiableList());
-            } else {
-                throw new MochizukiException("That task number does not exist. Try `list` to see valid numbers.");
-            }
-            System.out.println(line);
-            return false;
-        }
-
-        if ("todo".equals(input)) {
-            throw new MochizukiException("A to-do needs a description after `todo`.");
-        }
-        if (input.startsWith("todo ")) {
-            String description = input.substring(5).trim();
-            if (description.isEmpty()) {
-                throw new MochizukiException("A to-do needs a description after `todo`.");
-            }
-            tasks.add(new Todo(description));
-            System.out.println(" Got it. I've added this task:");
-            System.out.println("   " + tasks.get(tasks.size() - 1).formatForList());
-            System.out.println(" Now you have " + tasks.size() + " tasks in the list.");
-            storage.save(tasks.asUnmodifiableList());
-            System.out.println(line);
-            return false;
-        }
-
-        if ("deadline".equals(input)) {
-            throw new MochizukiException("A deadline needs a description and a /by time.");
-        }
-        if (input.startsWith("deadline ")) {
-            int byIndex = input.indexOf(" /by ");
-            String description = byIndex >= 0 ? input.substring(9, byIndex).trim() : "";
-            String by = byIndex >= 0 ? input.substring(byIndex + 5).trim() : "";
-            if (description.isEmpty() || by.isEmpty()) {
-                throw new MochizukiException("A deadline needs a description and a /by time.");
-            }
-            tasks.add(new Deadline(description, by));
-            System.out.println(" Got it. I've added this task:");
-            System.out.println("   " + tasks.get(tasks.size() - 1).formatForList());
-            System.out.println(" Now you have " + tasks.size() + " tasks in the list.");
-            storage.save(tasks.asUnmodifiableList());
-            System.out.println(line);
-            return false;
-        }
-
-        if ("event".equals(input)) {
-            throw new MochizukiException("An event needs a description, /from time, and /to time.");
-        }
-        if (input.startsWith("event ")) {
-            int fromIndex = input.indexOf(" /from ");
-            int toIndex = input.indexOf(" /to ");
-            String description = fromIndex >= 0 ? input.substring(6, fromIndex).trim() : "";
-            String from = (fromIndex >= 0 && toIndex > fromIndex)
-                    ? input.substring(fromIndex + 7, toIndex).trim()
-                    : "";
-            String to = toIndex >= 0 ? input.substring(toIndex + 5).trim() : "";
-            if (description.isEmpty() || from.isEmpty() || to.isEmpty()) {
-                throw new MochizukiException("An event needs a description, /from time, and /to time.");
-            }
-            tasks.add(new Event(description, from, to));
-            System.out.println(" Got it. I've added this task:");
-            System.out.println("   " + tasks.get(tasks.size() - 1).formatForList());
-            System.out.println(" Now you have " + tasks.size() + " tasks in the list.");
-            storage.save(tasks.asUnmodifiableList());
-            System.out.println(line);
-            return false;
-        }
-
-        throw new MochizukiException("I don't recognize that incantation. Try `list`, `todo`, `deadline`, or `event`.");
-    }
-
-    private static int parseIndex(String raw) {
-        try {
-            return Integer.parseInt(raw.trim()) - 1;
-        } catch (NumberFormatException e) {
-            return -1;
-        }
+    public static void main(String[] args) {
+        new Mochizuki(Paths.get("data", "mochizuki.txt")).run();
     }
 }
