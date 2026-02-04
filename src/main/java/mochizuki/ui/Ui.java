@@ -2,6 +2,9 @@ package mochizuki.ui;
 
 import java.util.Scanner;
 
+import mochizuki.task.Task;
+import mochizuki.tasklist.TaskList;
+
 public class Ui {
     private static final String LINE = "____________________________________________________________";
     private final Scanner scanner;
@@ -37,5 +40,42 @@ public class Ui {
 
     public void showError(String message) {
         showMessage(message);
+    }
+
+    public void showBye() {
+        showMessage("Bye. Hope to see you again soon!");
+    }
+
+    public void showTaskList(TaskList tasks) {
+        if (tasks.isEmpty()) {
+            showMessage("The shrine shelves are empty.");
+            return;
+        }
+        showMessage("Here are the tasks in your list:");
+        for (int i = 0; i < tasks.size(); i++) {
+            System.out.println(" " + (i + 1) + "." + tasks.get(i).formatForList());
+        }
+    }
+
+    public void showAdded(Task task, int count) {
+        showMessage("Got it. I've added this task:");
+        System.out.println("   " + task.formatForList());
+        showMessage("Now you have " + count + " tasks in the list.");
+    }
+
+    public void showMarked(Task task) {
+        showMessage("Nice! I've marked this task as done:");
+        System.out.println("   " + task.formatForList());
+    }
+
+    public void showUnmarked(Task task) {
+        showMessage("OK, I've marked this task as not done yet:");
+        System.out.println("   " + task.formatForList());
+    }
+
+    public void showDeleted(Task task, int count) {
+        showMessage("Noted. I've removed this task:");
+        System.out.println("   " + task.formatForList());
+        showMessage("Now you have " + count + " tasks in the list.");
     }
 }
