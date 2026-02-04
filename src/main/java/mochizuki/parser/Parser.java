@@ -9,6 +9,7 @@ import mochizuki.command.FindDateCommand;
 import mochizuki.command.ExitCommand;
 import mochizuki.command.ListCommand;
 import mochizuki.command.MarkCommand;
+import mochizuki.command.SecretCommand;
 import mochizuki.command.TodoCommand;
 import mochizuki.command.UnmarkCommand;
 import mochizuki.exception.MochizukiException;
@@ -30,6 +31,42 @@ public class Parser {
         String trimmed = input.trim();
         if ("bye".equals(trimmed)) {
             return new ExitCommand();
+        }
+        if ("moon".equalsIgnoreCase(trimmed)) {
+            return new SecretCommand("""
+          _____
+       .-'     '-.
+     .'           '.
+    /               \\
+   |                 |
+    \\               /
+     '.           .'
+       '-.___.-'
+The moon remembers your steady steps.
+""");
+        }
+        if ("eclipse".equalsIgnoreCase(trimmed)) {
+            return new SecretCommand("""
+       _____       _____
+    .-'     '-._.-'     '-.
+   /                       \\
+  |                         |
+  |      (        )         |
+   \\                       /
+    '-._______________,-'
+
+A brief hush... then the world returns, brighter.
+""");
+        }
+        if ("tide".equalsIgnoreCase(trimmed)) {
+            return new SecretCommand("""
+       ~    ~     ~   ~ ~
+    ~     ~  ~      ~    ~
+  ~   ~      ~   ~     ~   ~
+      ~  ~    ~  ~    ~   ~
+ ~   ~     ~    ~   ~      ~
+Your tasks ebb and flow; you still command the shore.
+""");
         }
         if ("list".equals(trimmed)) {
             return new ListCommand();
@@ -122,7 +159,7 @@ public class Parser {
         try {
             return LocalDate.parse(raw.trim());
         } catch (DateTimeParseException e) {
-            throw new MochizukiException("Dates should look like yyyy-mm-dd, e.g., 2019-12-02.");
+            throw new MochizukiException("Dates should look like yyyy-mm-dd, e.g., 2026-02-02.");
         }
     }
 }

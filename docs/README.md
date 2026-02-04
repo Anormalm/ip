@@ -161,3 +161,10 @@ Tasks are saved automatically to `data/mochizuki.txt` in the working directory. 
 - If you made it this far, you found a small thank-you note.
 - Thank you, CS2113 Teaching Group, for the guidance and structure throughout the project.
 - Thank you, peer reviewers, for the careful feedback and time.
+
+_By the way:
+01001101 01001111 01001111 01001110
+01000101 01000011 01001100 01001001 01010000 01010011 01000101
+01010100 01001001 01000100 01000101
+
+:)_
