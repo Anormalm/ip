@@ -8,6 +8,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import mochizuki.exception.MochizukiException;
+import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
+
 import mochizuki.task.Deadline;
 import mochizuki.task.Event;
 import mochizuki.task.Task;
@@ -97,7 +100,11 @@ public class Storage {
             if (parts.length < 4) {
                 return null;
             }
-            task = new Deadline(description, parts[3]);
+            try {
+                task = new Deadline(description, LocalDate.parse(parts[3]));
+            } catch (DateTimeParseException e) {
+                return null;
+            }
             break;
         case "E":
             if (parts.length < 5) {

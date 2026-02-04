@@ -1,5 +1,7 @@
 package mochizuki.command;
 
+import java.time.LocalDate;
+
 import mochizuki.exception.MochizukiException;
 import mochizuki.storage.Storage;
 import mochizuki.task.Deadline;
@@ -8,16 +10,16 @@ import mochizuki.ui.Ui;
 
 public class DeadlineCommand extends Command {
     private final String description;
-    private final String by;
+    private final LocalDate by;
 
-    public DeadlineCommand(String description, String by) {
+    public DeadlineCommand(String description, LocalDate by) {
         this.description = description;
         this.by = by;
     }
 
     @Override
     public void execute(TaskList tasks, Ui ui, Storage storage) throws MochizukiException {
-        if (description.isEmpty() || by.isEmpty()) {
+        if (description.isEmpty() || by == null) {
             throw new MochizukiException("A deadline needs a description and a /by time.");
         }
         tasks.add(new Deadline(description, by));
