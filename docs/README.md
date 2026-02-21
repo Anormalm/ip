@@ -2,7 +2,7 @@
 
 Mochizuki is a calm, minimal task tracker for to-dos, deadlines, and events. It saves automatically, supports fast keyword search, and can show tasks that occur on a specific date.
 
-<img src="images/mochizuki.png" alt="Mochizuki screenshot" width="700">
+<img src="images/mochizuki.png" alt="Mochizuki screenshot" width="848">
 
 ## Contents
 
@@ -24,18 +24,18 @@ Mochizuki is a calm, minimal task tracker for to-dos, deadlines, and events. It 
 
 ## Command Summary
 
-| Command | Description |
-|---|---|
-| `list` | Show all tasks |
-| `todo DESCRIPTION` | Add a to-do |
-| `deadline DESCRIPTION /by YYYY-MM-DD` | Add a deadline |
-| `event DESCRIPTION /from YYYY-MM-DD /to YYYY-MM-DD` | Add an event |
-| `mark INDEX` | Mark a task as done |
-| `unmark INDEX` | Mark a task as not done |
-| `delete INDEX` | Remove a task |
-| `find KEYWORD` | Find tasks by keyword |
-| `find-date YYYY-MM-DD` | Find tasks occurring on a date |
-| `bye` | Exit |
+| Command                                             | Description                    |
+|-----------------------------------------------------|--------------------------------|
+| `list`                                              | Show all tasks                 |
+| `todo DESCRIPTION`                                  | Add a to-do                    |
+| `deadline DESCRIPTION /by YYYY-MM-DD`               | Add a deadline                 |
+| `event DESCRIPTION /from YYYY-MM-DD /to YYYY-MM-DD` | Add an event                   |
+| `mark INDEX`                                        | Mark a task as done            |
+| `unmark INDEX`                                      | Mark a task as not done        |
+| `delete INDEX`                                      | Remove a task                  |
+| `find KEYWORD`                                      | Find tasks by keyword          |
+| `find-date YYYY-MM-DD`                              | Find tasks occurring on a date |
+| `bye`                                               | Exit                           |
 
 ## Features
 
