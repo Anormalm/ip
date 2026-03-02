@@ -1,26 +1,170 @@
-# Duke project template
+# Mochizuki User Guide
 
-This is a project template for a greenfield Java project. It's named after the Java mascot _Duke_. Given below are instructions on how to use it.
+Mochizuki is a calm, minimal task tracker for to-dos, deadlines, and events. It saves automatically, supports fast keyword search, and can show tasks that occur on a specific date.
 
-## Setting up in Intellij
+<img src="docs/images/mochizuki.png" alt="Mochizuki screenshot" width="848">
 
-Prerequisites: JDK 17, update Intellij to the most recent version.
+## Contents
 
-1. Open Intellij (if you are not in the welcome screen, click `File` > `Close Project` to close the existing project first)
-1. Open the project into Intellij as follows:
-   1. Click `Open`.
-   1. Select the project directory, and click `OK`.
-   1. If there are any further prompts, accept the defaults.
-1. Configure the project to use **JDK 17** (not other versions) as explained in [here](https://www.jetbrains.com/help/idea/sdk.html#set-up-jdk).<br>
-   In the same dialog, set the **Project language level** field to the `SDK default` option.
-1. After that, locate the `src/main/java/Duke.java` file, right-click it, and choose `Run Duke.main()` (if the code editor is showing compile errors, try restarting the IDE). If the setup is correct, you should see something like the below as the output:
+- [Quick Start](#quick-start)
+- [Command Summary](#command-summary)
+- [Features](#features)
+- [Date Formats](#date-formats)
+- [FAQ](#faq)
+- [Data Storage](#data-storage)
+
+## Quick Start
+
+1. Ensure Java 17 is installed.
+2. Run:
    ```
-   Hello from
-    ____        _        
-   |  _ \ _   _| | _____ 
-   | | | | | | | |/ / _ \
-   | |_| | |_| |   <  __/
-   |____/ \__,_|_|\_\___|
+   java -jar Mochizuki.jar
    ```
+3. Enter a command and press Enter.
 
-**Warning:** Keep the `src\main\java` folder as the root folder for Java files (i.e., don't rename those folders or move Java files to another folder outside of this folder path), as this is the default location some tools (e.g., Gradle) expect to find Java files.
+## Command Summary
+
+| Command                                             | Description                    |
+|-----------------------------------------------------|--------------------------------|
+| `list`                                              | Show all tasks                 |
+| `todo DESCRIPTION`                                  | Add a to-do                    |
+| `deadline DESCRIPTION /by YYYY-MM-DD`               | Add a deadline                 |
+| `event DESCRIPTION /from YYYY-MM-DD /to YYYY-MM-DD` | Add an event                   |
+| `mark INDEX`                                        | Mark a task as done            |
+| `unmark INDEX`                                      | Mark a task as not done        |
+| `delete INDEX`                                      | Remove a task                  |
+| `find KEYWORD`                                      | Find tasks by keyword          |
+| `find-date YYYY-MM-DD`                              | Find tasks occurring on a date |
+| `bye`                                               | Exit                           |
+
+## Features
+
+### Add a to-do
+
+**Command:** `todo borrow book`  
+**Result:**
+```
+ Got it. I've added this task:
+   [T][ ] borrow book
+ Now you have 1 tasks in the list.
+```
+
+### Add a deadline
+
+**Command:** `deadline return book /by 2026-02-12`  
+**Result:**
+```
+ Got it. I've added this task:
+   [D][ ] return book (by: Feb 12 2026)
+ Now you have 2 tasks in the list.
+```
+
+### Add an event
+
+**Command:** `event project meeting /from 2026-02-10 /to 2026-02-12`  
+**Result:**
+```
+ Got it. I've added this task:
+   [E][ ] project meeting (from: Feb 10 2026 to: Feb 12 2026)
+ Now you have 3 tasks in the list.
+```
+
+### List tasks
+
+**Command:** `list`  
+**Result:**
+```
+ Here are the tasks in your list:
+ 1.[T][ ] borrow book
+ 2.[D][ ] return book (by: Feb 12 2026)
+ 3.[E][ ] project meeting (from: Feb 10 2026 to: Feb 12 2026)
+```
+
+### Mark a task as done
+
+**Command:** `mark 2`  
+**Result:**
+```
+ Nice! I've marked this task as done:
+   [D][X] return book (by: Feb 12 2026)
+```
+
+### Unmark a task
+
+**Command:** `unmark 2`  
+**Result:**
+```
+ OK, I've marked this task as not done yet:
+   [D][ ] return book (by: Feb 12 2026)
+```
+
+### Delete a task
+
+**Command:** `delete 3`  
+**Result:**
+```
+ Noted. I've removed this task:
+   [E][ ] project meeting (from: Feb 10 2026 to: Feb 12 2026)
+ Now you have 2 tasks in the list.
+```
+
+### Find tasks by keyword
+
+**Command:** `find book`  
+**Result:**
+```
+ Here are the matching tasks in your list:
+ 1.[T][ ] borrow book
+ 2.[D][ ] return book (by: Feb 12 2026)
+```
+
+### Find tasks by date
+
+**Command:** `find-date 2026-02-12`  
+**Result:**
+```
+ Tasks on Feb 12 2026:
+ 1.[D][ ] return book (by: Feb 12 2026)
+ 2.[E][ ] project meeting (from: Feb 10 2026 to: Feb 12 2026)
+```
+
+### Exit
+
+**Command:** `bye`  
+**Result:**
+```
+ Bye. Hope to see you again soon!
+```
+
+## Date Formats
+
+- Input format: `YYYY-MM-DD` (e.g., `2026-02-12`)
+- Output format: `MMM d yyyy` (e.g., `Feb 12 2026`)
+
+## FAQ
+
+**Why does `deadline` or `event` reject my date?**  
+Dates must be in `YYYY-MM-DD`. Example: `2026-02-12`.
+
+**What happens if the data file is missing?**  
+Mochizuki will start with an empty list and create the file when you add a task.
+
+**My data file looks corrupted. What happens?**  
+Invalid lines are skipped, and the rest of the tasks still load.
+
+## Data Storage
+
+Tasks are saved automatically to `data/mochizuki.txt` in the working directory. The file is created if it does not exist.
+
+## Easter Eggs
+
+- If you made it this far, you found a small thank-you note.
+- Thank you, CS2113 Teaching Group, for the guidance and structure throughout the project.
+- Thank you, peer reviewers, for the careful feedback and time.
+
+_By the way:
+01001101 01001111 01001111 01001110
+01000101 01000011 01001100 01001001 01010000 01010011 01000101
+01010100 01001001 01000100 01000101
+
+:)_
